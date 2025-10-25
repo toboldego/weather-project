@@ -1,0 +1,7 @@
+cloudy
+hail
+hazy
+lighting
+rain
+snow
+sunny
