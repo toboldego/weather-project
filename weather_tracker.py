@@ -19,20 +19,22 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
-#
+#ew3	 
 
 import sys
 import argparse
 
 from jetson_inference import imageNet
 from jetson_utils import videoSource, videoOutput, cudaFont, Log
-
+bad_weather = ["hail", "snow", "lightning", "hazy"]
+good_weather = ["cloudy", "sunny", "rain"]
+message_indicator = 0
 # parse the command line
 parser = argparse.ArgumentParser(description="Classify a live camera stream using an image recognition DNN.", 
                                  formatter_class=argparse.RawTextHelpFormatter, 
                                  epilog=imageNet.Usage() + videoSource.Usage() + videoOutput.Usage() + Log.Usage())
 
-parser.add_argument("input", type=str, default="", nargs='?', help="URI of the input stream")
+parser.add_argument("input", type=str, default="/dev/video0", nargs='?', help="URI of the input stream")
 parser.add_argument("output", type=str, default="", nargs='?', help="URI of the output stream")
 parser.add_argument("--network", type=str, default="googlenet", help="pre-trained model to load (see below for options)")
 parser.add_argument("--topK", type=int, default=1, help="show the topK number of class predictions (default: 1)")
@@ -76,7 +78,15 @@ while True:
         classLabel = net.GetClassLabel(classID)
         confidence *= 100.0
 
-        print(f"imagenet:  {confidence:05.2f}% class #{classID} ({classLabel})")
+		# printing whether to put plants outside based on the weather
+		if classLabel in good_weather and message_indicator != 1:
+			print("Put your plants outside! :)")
+			message_indicator = 1
+		elif classLabel in bad_weather and message_indicator != -1:
+			print("put your plants inside! :)")
+			message_idicator = -1
+			
+        #print(f"imagenet:  {confidence:05.2f}% class #{classID} ({classLabel})")
 
         font.OverlayText(img, text=f"{confidence:05.2f}% {classLabel}", 
                          x=5, y=5 + n * (font.GetSize() + 5),
