@@ -24,12 +24,14 @@ This model works by using a camera looking at the sky and based off of its train
 
 ## Running this project
 
- 
 
-1. Add steps for running this project.
 
-2. Make sure to include any required libraries that need to be installed for your project to run.
-
+1. install jetson inference library
+2. download this project
+3. change directories to project (cd weather-project)
+4. connect webcam to device
+5. run python script (python3 weather_tracker.py)
+6. point webcam at sky (should have pretty clear view)
  
 
 [View a video explanation here](video link)
